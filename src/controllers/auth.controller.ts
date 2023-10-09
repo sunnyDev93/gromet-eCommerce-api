@@ -14,6 +14,9 @@ const register = async (req : Request, res : Response) => {
 
     try {
         const existedUser = await User.findOne({email: email});
+        if (password.length < 6) {
+            return res.status(StatusCodes.BAD_REQUEST).json({errorMsg: "Weak Password"});
+        }
         if (existedUser) {
             return res.status(StatusCodes.BAD_REQUEST).json({errorMsg: "email is already existed"});
         } else {
@@ -21,7 +24,7 @@ const register = async (req : Request, res : Response) => {
                 name: req.body.name,
                 email: req.body.email,
                 password: bcrypt.hashSync(req.body.password, 8),
-                role: req.body.role
+                role: req.body.role || "user"
             })
             await user.save();
             return res.status(StatusCodes.OK).json({message: "User is registered successfully"});
@@ -56,7 +59,7 @@ const login = async (req : Request, res : Response) => {
 }
 
 const fetchMe = async (req : Request, res : Response) => {
-    const {email} = req.body;
+    const email = req.body ?. decoded ?. email;
     try {
         const user = await User.findOne({email: email});
         return res.status(StatusCodes.OK).json(user);
@@ -72,6 +75,7 @@ const forgotPassword = async (req : Request, res : Response) => {
         if (! user) 
             return res.status(400).send("user with given email doesn't exist");
         
+
 
         let token = await Token.findOne({userId: user._id});
         if (! token) {
