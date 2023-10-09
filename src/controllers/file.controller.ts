@@ -1,5 +1,5 @@
-import {Request, Response} from "express";
-import {StatusCodes} from "http-status-codes";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import * as fs from "fs";
 
 const upload = async (req: Request, res: Response) => {

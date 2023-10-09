@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken'
 import { NextFunction, Request, Response } from 'express';
+import jwt from 'jsonwebtoken';
 import { secretKey } from '../config';
 import { StatusCodes } from 'http-status-codes';
 
@@ -10,7 +10,8 @@ export const verifyToken = (req:Request, res: Response, next: NextFunction) => {
       if (err) {
         return res.status(StatusCodes.UNAUTHORIZED).send("Unauthorized");
       } else {
-        req.body = decoded;
+        // @ts-ignore
+        req.body = {...req.body, ...decoded};
         next()
       }
     });

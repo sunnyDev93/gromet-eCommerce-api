@@ -20,6 +20,7 @@ app.use(urlencoded({
   extended: true
 }));
 app.use(cors())
+
 const routes = router;
 
 app.use("/api", routes);
